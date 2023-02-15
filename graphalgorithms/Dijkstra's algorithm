@@ -1,0 +1,108 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<map>
+
+using namespace std;
+//defining a graph
+struct node{
+    int name;
+    vector<struct node> adjacentn;
+    map<int , int> weight;
+    int w;
+    bool checked;
+};
+
+struct G_graph{
+    vector<struct node> nodes;
+};
+
+
+//Input graph
+G_graph input_graph()
+{
+    struct G_graph graph;
+    cout << "please enter the number of nodes" << endl;
+    int nodes;
+    cin >> nodes;
+    int f , se;
+    int weight_;
+    for(int i = 0 ; i < nodes ; i++)
+    {
+        cout << "enter a node and its adjacent nodes" << endl;
+        cin >> f;
+        struct node node;
+        node.name = f;
+        node.checked = false;
+        cout << "number of adjacent nodes :" << endl;
+        int a;
+        cin >> a;
+
+
+        for(int m = 0 ; m < a ; m++)
+        {
+            cin >> se;
+            struct node adnode;
+            adnode.checked = false;
+            adnode.name = se;
+            node.adjacentn.push_back(adnode);
+            cout << "please enter the weight of the edge between the two nodes" << endl;
+            cin >> weight_;
+            node.weight[se] = weight_;
+        }
+        graph.nodes.push_back(node);
+    }
+
+    return graph;
+}
+
+// dijkestra 
+void shortestpath_dijkstra(struct G_graph graph , struct node node)
+{
+    map<int , int> dist;
+    queue<struct node> queuenode;
+    for(auto i : graph.nodes)
+    {
+        dist[i.name] = 21474836;
+    }
+    dist[node.name] = 0;
+    node.w = 0;
+    queuenode.push(node);
+    for(auto i : graph.nodes)
+    {
+        queuenode.push(i);
+    }
+while(!queuenode.empty())
+{
+    struct node node = queuenode.front();
+    if(!node.checked)
+    {
+    queuenode.front().checked = true;
+    queuenode.pop();
+    for(auto i : node.adjacentn)
+    {
+        int temp_dist = dist[node.name] + node.weight[i.name];
+         if(temp_dist < dist[i.name])
+            {
+             dist[i.name] = temp_dist;
+            }
+    }
+    }
+    else{
+        queuenode.pop();
+    }
+}
+    for(auto i : graph.nodes)
+    {
+        i.w = dist[i.name];
+        cout << i.name << " shortest path " << i.w << endl; 
+    }
+
+}
+
+int main()
+{
+    struct G_graph graph = input_graph();
+    struct node node = graph.nodes[0];
+    shortestpath_dijkstra(graph,node);
+}
