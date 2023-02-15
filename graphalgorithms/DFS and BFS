@@ -1,0 +1,103 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+
+using namespace std;
+//defining a graph
+struct node{
+    int name;
+    vector<struct node> adjacentn;
+    bool checked;
+};
+
+struct G_graph{
+    vector<struct node> nodes;
+};
+
+//DFS
+void DFS(struct G_graph graph , struct node p)
+{
+    if(!p.checked)
+    {
+        cout << p.name << endl;
+        p.checked = true;
+        for(auto i : p.adjacentn)
+        {
+            DFS(graph , i);
+        }
+    }
+}
+
+//BFS
+void BFS (struct G_graph graph , struct node p)
+{
+    queue<struct node> adjacentqueue;
+    if(!p.checked)
+    {
+        adjacentqueue.push(p);
+        while(!adjacentqueue.empty())
+        {
+            struct node node = adjacentqueue.front();
+            if(!node.checked)
+            {
+                cout << node.name << endl;
+                node.checked = true;
+                for(auto i : node.adjacentn)
+                {
+                    adjacentqueue.push(i);
+                }
+                adjacentqueue.pop();
+
+            }
+            else{
+                adjacentqueue.pop();
+            }
+        }
+    }
+    
+
+
+}
+
+//Input graph
+G_graph input_graph()
+{
+    struct G_graph graph;
+    cout << "please enter the number of nodes" << endl;
+    int edges;
+    cin >> edges;
+    int f , se;
+    for(int i = 0 ; i < edges ; i++)
+    {
+        cout << "enter a node and its adjacent nodes" << endl;
+        cin >> f;
+        struct node node;
+        node.name = f;
+        node.checked = false;
+        cout << "number of adjacent nodes :" << endl;
+        int a;
+        cin >> a;
+
+
+        for(int m = 0 ; m < a ; m++)
+        {
+            cin >> se;
+            struct node adnode;
+            adnode.checked = false;
+            adnode.name = se;
+            node.adjacentn.push_back(adnode);
+        }
+        graph.nodes.push_back(node);
+    }
+
+    return graph;
+}
+
+
+int main()
+{
+    struct G_graph graph = input_graph();
+    struct node node = graph.nodes[0];
+    DFS(graph,node);
+    BFS(graph,node);
+}
